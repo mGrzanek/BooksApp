@@ -8,23 +8,44 @@
     },
     books: {
       bookList: '.books-list',
+      bookImage: '.book__image',
     },
+  };
+
+  const classNames = {
+    favoriteClass: 'favorite',
   };
 
   const templates = {
     menuBooks: Handlebars.compile(document.querySelector(select.templateOf.menuBooks).innerHTML),
   };
 
-
+  const favoriteBooks = [];
+  const booksWrapper = document.querySelector(select.books.bookList);
 
   const renderBooks = function(){
     for(let book of dataSource.books){
       const generatedHTML = templates.menuBooks(book);
-      const booksWrapper = document.querySelector(select.books.bookList);
       const generatedDomElement = utils.createDOMFromHTML(generatedHTML);
       booksWrapper.appendChild(generatedDomElement);
     }
   };
 
+  const initActions = function(){
+    const bookImages = booksWrapper.querySelectorAll(select.books.bookImage);
+    for(let bookImage of bookImages){
+      bookImage.addEventListener('dblclick', function(event){
+        event.preventDefault();
+        const attributeDataId = bookImage.getAttribute('data-id');
+        bookImage.classList.add(classNames.favoriteClass);  
+        favoriteBooks.push(attributeDataId);    
+        console.log(favoriteBooks);
+      });
+    }
+  };
+
+  
+
   renderBooks();
+  initActions();
 }
