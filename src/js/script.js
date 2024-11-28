@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-empty */
 {
   'use strict';
@@ -31,8 +32,26 @@
   const booksWrapper = document.querySelector(select.books.bookList);
   const formWrapper = document.querySelector(select.form.formWrapper);
 
+  const determineRatingBgc = function(rating){
+    if(rating < 6){
+      return 'linear-gradient(to bottom,  #fefcea 0%, #f1da36 100%)';
+    } else if(rating > 6 && rating <= 8){
+      return 'linear-gradient(to bottom, #b4df5b 0%,#b4df5b 100%)';
+    } else if(rating > 8 && rating <= 9){
+      return 'linear-gradient(to bottom, #299a0b 0%, #299a0b 100%)';
+    } else if(rating >9){
+      return 'linear-gradient(to bottom, #ff0084 0%,#ff0084 100%)';
+    }
+  };
+
+  const setRatingWidth = function(rating){
+    return `${rating*10}%`;
+  };
+
   const renderBooks = function(){
-    for(let book of dataSource.books){
+    for(let book of dataSource.books){ 
+      book.ratingBgc = determineRatingBgc(book.rating);
+      book.ratingWidth = setRatingWidth(book.rating);
       const generatedHTML = templates.menuBooks(book);
       const generatedDomElement = utils.createDOMFromHTML(generatedHTML);
       booksWrapper.appendChild(generatedDomElement);
