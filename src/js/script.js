@@ -10,11 +10,15 @@
       bookList: '.books-list',
       bookImage: '.book__image',
     },
+    form: {
+      formWrapper: '.filters',
+    },
   };
 
   const classNames = {
     favoriteClass: 'favorite',
     bookImage: 'book__image',
+    shouldHidden: 'hidden',
   };
 
   const templates = {
@@ -22,7 +26,10 @@
   };
 
   const favoriteBooks = [];
+  const filters = [];
+
   const booksWrapper = document.querySelector(select.books.bookList);
+  const formWrapper = document.querySelector(select.form.formWrapper);
 
   const renderBooks = function(){
     for(let book of dataSource.books){
@@ -32,8 +39,45 @@
     }
   };
 
+  const booksFilter = function(){
+    for(let book of dataSource.books){
+      let shouldBeHidden = false;
+      const bookToHidden = booksWrapper.querySelector(`.book__image[data-id="${book.id}"]`);
+      console.log('bookToHidden: ', bookToHidden);
+      for(let filter of filters){
+        if(!book.details[filter]){
+          shouldBeHidden = true;
+          break;
+        }
+      }
+      if(shouldBeHidden){  
+        bookToHidden.classList.add(classNames.shouldHidden);
+      } else {
+        bookToHidden.classList.remove(classNames.shouldHidden);
+      }
+    }
+  };
+
   const initActions = function(){
-    //const bookImages = booksWrapper.querySelectorAll(select.books.bookImage);
+    
+    formWrapper.addEventListener('click', function(event){
+      const clickedElement = event.target;
+      console.log(clickedElement);
+      if(clickedElement.tagName === 'INPUT'
+        && clickedElement.name === 'filter'
+        && clickedElement.type === 'checkbox'
+      ){
+        if(clickedElement.checked){
+          filters.push(clickedElement.value);
+          booksFilter();
+        } else {
+          const valueToRemove = filters.indexOf(clickedElement.value);
+          filters.splice(valueToRemove, 1);
+          booksFilter();
+        }
+        console.log('filters: ', filters);
+      }
+    });
 
     booksWrapper.addEventListener('dblclick', function(event){
       event.preventDefault();
