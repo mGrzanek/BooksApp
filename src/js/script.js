@@ -14,6 +14,7 @@
 
   const classNames = {
     favoriteClass: 'favorite',
+    bookImage: 'book__image',
   };
 
   const templates = {
@@ -32,22 +33,27 @@
   };
 
   const initActions = function(){
-    const bookImages = booksWrapper.querySelectorAll(select.books.bookImage);
-    for(let bookImage of bookImages){
-      bookImage.addEventListener('dblclick', function(event){
-        event.preventDefault();
-        const attributeDataId = bookImage.getAttribute('data-id');        
+    //const bookImages = booksWrapper.querySelectorAll(select.books.bookImage);
+
+    booksWrapper.addEventListener('dblclick', function(event){
+      event.preventDefault();
+      console.log(event);
+      const clickedElement = event.target.offsetParent;
+      console.log(clickedElement);
+      if(clickedElement.classList.contains(classNames.bookImage)){
+        const attributeDataId = clickedElement.getAttribute('data-id');        
         if(favoriteBooks.includes(attributeDataId)){
-          bookImage.classList.remove(classNames.favoriteClass);
+          clickedElement.classList.remove(classNames.favoriteClass);
           const bookToRemove = favoriteBooks.indexOf(attributeDataId);
           favoriteBooks.splice(bookToRemove, 1);  
         } else {
-          bookImage.classList.add(classNames.favoriteClass);
+          clickedElement.classList.add(classNames.favoriteClass);
           favoriteBooks.push(attributeDataId);
         }         
         console.log(favoriteBooks);
-      });
-    }
+      }
+    });
+    
   };
 
   renderBooks();
